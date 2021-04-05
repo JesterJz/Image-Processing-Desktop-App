@@ -4,20 +4,25 @@ from PIL import Image, ImageTk
 from tkinter.font import Font
 from tkinter import filedialog
 from os import path
+import numpy as np
+import scipy.misc
+from scipy import ndimage
 
 root = Tk()
 root.title("Xử lý ảnh")
 root.geometry("1250x700")
-# root.maxsize(600, 880)
-# root.iconphoto('bg.jpg')
+root.maxsize(1250, 700)
 
+temp_img = None
+
+# root.iconphoto('bg.jpg')
 # load = Image.open('./Image/bg.jpg')
 # render = ImageTk.PhotoImage(load)
 # img = Label(root, image=render)
 # img.place(x=0, y=0)
-
 # root.configure(background='pink')
 
+# Set Title Name App
 name = Label(root, text="Jester Jz", fg="#000", bd=0, bg="pink")
 name.config(font=("Engravers MT", 20))
 name.grid(column=0, row=0, columnspan=4, pady=10)
@@ -30,6 +35,7 @@ before_name.grid(column=0, row=1, columnspan=2, padx=5, pady=5)
 # Image box before
 # Open Img
 pic_default = Image.open('./Image/icon_default.png')
+
 # convert images to ImageTK format
 img_def = ImageTk.PhotoImage(pic_default)
 
@@ -63,14 +69,14 @@ def clear():
 
 
 def select():
-    global path
+    global path, temp_img
 
     path = filedialog.askopenfilename()
 
     if len(path) > 0:
         # load the image from disk
         img = cv.imread(path)
-
+        temp_img = path
         # Convert img to RGB
         img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 
@@ -82,6 +88,7 @@ def select():
 
         # convert images to ImageTK format
         img_bf = ImageTk.PhotoImage(resize_bf)
+
         # set image to Label
         box_img_before.configure(image=img_bf)
         box_img_before.image = img_bf
@@ -89,7 +96,7 @@ def select():
 
 
 def open_camera():
-
+    global temp_img
     cap = cv.VideoCapture(0)
     while(True):
         # Capture frame-by-frame
@@ -107,6 +114,8 @@ def open_camera():
 
             # load the image from disk
             img_pic = cv.imread("./Image/take_of_pic.png")
+
+            temp_img = "./Image/take_of_pic.png"
 
             # Convert img to RGB
             img_pic = cv.cvtColor(img_pic, cv.COLOR_BGR2RGB)
@@ -132,15 +141,81 @@ def open_camera():
     return 0
 
 
-def Sobel():
+def Sobel(Image):
+
+    # im = cv.imread('./Image/a.jpg')
+    # im = im.astype('int32')
+    # dx = ndimage.sobel(im, 0)  # horizontal derivative
+    # dy = ndimage.sobel(im, 1)  # vertical derivative
+    # mag = np.hypot(dx, dy)  # magnitude
+    # mag *= 255.0 / np.max(mag)  # normalize (Q&D)
+    # mag.save('sobel.jpg')
+    # # Edge_x = cv.Sobel(Image, cv.CV_64F, 1, 0, ksize=3)
+    # # # cv.imshow('SobelY filter', Edge_x)
+    # # Edge_y = cv.Sobel(Image, cv.CV_64F, 0, 1, ksize=3)
+
+    # # # Edge = np.sqrt(Edge_x**2 + Edge_y**2)
+    # # print(Edge_x)
+    # # # resize Image
+    # # resize_bf = Edge_x.resize((600, 450), Image.ANTIALIAS)
+
+    # # convert images to ImageTK format
+    # img = ImageTk.PhotoImage(Image.open(path))
+    # # set image to Label
+    # box_img_after.configure(image=img)
+    # box_img_after.image = img
     return
 
 
-def Laplacian():
+def Laplacian(input_image):
+    im = cv.imread(input_image, 0)
+    temp = im.copy()
+    # print(im.shape[0],im.shape[1])
+    for i in range(1, im.shape[0]-1):
+        for j in range(1, im.shape[1]-1):
+            A = (4*im.item(i, j)-im.item(i, j+1) -
+                 im.item(i+1, j)-im.item(i-1, j)-im.item(i, j-1))
+            #B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
+            #mag = (A*A + B*B)**(.5)
+            if(A < 0):
+                temp.itemset((i, j), 0)
+            elif(A > 255):
+                temp.itemset((i, j), 255)
+            else:
+                temp.itemset((i, j), A)
+
+    img_path = "Laplacian.jpg"
+    cv.imwrite(img_path, temp)
+
+    # resize Image
+    resize_bf = Image.open(img_path).resize((600, 450), Image.ANTIALIAS)
+    # # convert images to ImageTK format
+    img = ImageTk.PhotoImage(resize_bf)
+    # set image to Label
+    box_img_after.configure(image=img)
+    box_img_after.image = img
     return
 
 
-def Gray_Scale():
+def Gray_Scale(input_image):
+    gray_img = Image.open(input_image)
+    pixel_val = gray_img.load()
+    print(pixel_val[0, 0])
+    for i in range(gray_img.size[0]):
+        for j in range(gray_img.size[1]):
+            sum = 0
+            for k in range(0, 3):
+                sum += pixel_val[i, j][k]
+            pixel_val[i, j] = (sum//3, sum//3, sum//3)
+    img_path = "Gray.jpg"
+    gray_img.save(img_path)
+    # resize Image
+    resize_bf = Image.open(img_path).resize((600, 450), Image.ANTIALIAS)
+    # # convert images to ImageTK format
+    img = ImageTk.PhotoImage(resize_bf)
+    # set image to Label
+    box_img_after.configure(image=img)
+    box_img_after.image = img
     return
 
 
@@ -170,22 +245,22 @@ btn_cls.grid(column=3, row=4, padx=5, pady=5)
 
 # button Sobel
 btn_sobel = Button(root, text="Sobel", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Sobel(temp_img))
 btn_sobel.grid(column=0, row=3)
 
 # button Laplacian
 btn_Laplacian = Button(root, text="Laplacian", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Laplacian(temp_img))
 btn_Laplacian.grid(column=1, row=3)
 
 # button Gray Scale
 btn_Gray_Scale = Button(root, text="Gray Scale", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Gray_Scale(temp_img))
 btn_Gray_Scale.grid(column=2, row=3)
 
 # button Histogram
 btn_Histogram = Button(root, text="Histogram", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=Histogram)
 btn_Histogram.grid(column=3, row=3)
 
 root.mainloop()
