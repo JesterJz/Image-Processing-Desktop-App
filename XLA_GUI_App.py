@@ -29,12 +29,12 @@ before_name.grid(column=0, row=1, columnspan=2, padx=5, pady=5)
 
 # Image box before
 # Open Img
-pic_bf = Image.open('./Image/bg.jpg')
-# resize Img
-resize_bf = pic_bf.resize((600, 450), Image.ANTIALIAS)
+pic_default = Image.open('./Image/icon_default.png')
+# convert images to ImageTK format
+img_def = ImageTk.PhotoImage(pic_default)
 
-img_bf = ImageTk.PhotoImage(resize_bf)
-box_img_before = Label(root, image=img_bf)
+box_img_before = Label(root, image=img_def, width=600,
+                       height=450, bg="#303030")
 box_img_before.grid(column=0, row=2, columnspan=2, padx=10, pady=10)
 
 # title Image After
@@ -43,18 +43,23 @@ after_name.config(font=("Arial", 16, "bold"))
 after_name.grid(column=2, row=1, columnspan=2, padx=10, pady=10)
 
 # Image box before
-# Open Img
-pic_af = Image.open('./Image/a.jpg')
-# resize Img
-resize_af = pic_af.resize((600, 450), Image.ANTIALIAS)
-
-img_af = ImageTk.PhotoImage(resize_af)
-box_img_after = Label(root, image=img_af)
+box_img_after = Label(root, image=img_def, width=600,
+                      height=450, bg="#303030")
 box_img_after.grid(column=2, row=2, columnspan=2, padx=10, pady=10)
 
 
 def clear():
-    return
+    pic_default = Image.open('./Image/icon_default.png')
+    # convert images to ImageTK format
+    img_def = ImageTk.PhotoImage(pic_default)
+    # set image to Label default before
+    box_img_before.configure(image=img_def)
+    box_img_before.image = img_def
+
+    # set image to Label default after
+    box_img_after.configure(image=img_def)
+    box_img_after.image = img_def
+    return 0
 
 
 def select():
