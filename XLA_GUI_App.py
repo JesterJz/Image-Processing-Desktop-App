@@ -6,25 +6,25 @@ root.geometry("630x800")
 # root.maxsize(800, 800)
 # root.iconphoto('bg.jpg')
 
-# load = Image.open('./Image/bg.jpg')
-# render = ImageTk.PhotoImage(load)
-# img = Label(root, image=render)
-# img.place(x=0, y=0)
+load = Image.open('./Image/bg.jpg')
+render = ImageTk.PhotoImage(load)
+img = Label(root, image=render)
+img.place(x=0, y=0)
 
-root.configure(background='pink')
+# root.configure(background='pink')
 
-name = Label(root, text="Xử lý ảnh", fg="#fff", bd=0, bg="#000")
+name = Label(root, text="Xử lý ảnh", fg="#fff", bd=0, bg='#12053A')
 name.config(font=("Arial", 30))
 name.pack(pady=10)
 
-before = Label(root, text="Image Before", fg="#fff", bd=0, bg="#000")
+before = Label(root, text="Image Before", fg="#fff", bd=0, bg='#12053A')
 before.config(font=("Arial", 18))
 before.pack()
 
 box = Label(root, width=60, height=15)
 box.pack(pady=20)
 
-after = Label(root, text="Image After", fg="#fff", bd=0, bg="#000")
+after = Label(root, text="Image After", fg="#fff", bd=0, bg='#12053A')
 after.config(font=("Arial", 18))
 after.pack()
 
@@ -43,10 +43,10 @@ def select():
 
 
 btn_select = Button(btn_frame, text="Select Image", font=(
-    ("Arial"), 10, 'bold'), bg='#303030', fg='#fff')
+    ("Arial"), 10, 'bold'), bg='#303030', fg='#fff', command=select())
 btn_select.place(x=150, y=670)
 btn_clear = Button(btn_frame, text="Clear Image", font=(
-    ("Arial"), 10, 'bold'), bg='#303030', fg='#fff')
+    ("Arial"), 10, 'bold'), bg='#303030', fg='#fff', command=clear())
 btn_clear.place(x=400, y=670)
 
 root.mainloop()
