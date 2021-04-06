@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tkinter.font import Font
 from tkinter import filedialog
-from os import path
+import os
 import numpy as np
 import scipy.misc
 from scipy import ndimage
@@ -11,17 +11,12 @@ import matplotlib.pyplot as plt
 
 root = Tk()
 root.title("Xử lý ảnh")
-root.geometry("1250x700")
-root.maxsize(1250, 700)
+root.geometry("1920x1080")
+# root.maxsize(1920, 1080)
 
+img_counter = 0
 temp_img = None
-
-# root.iconphoto('bg.jpg')
-# load = Image.open('./Image/bg.jpg')
-# render = ImageTk.PhotoImage(load)
-# img = Label(root, image=render)
-# img.place(x=0, y=0)
-# root.configure(background='pink')
+# path = None
 
 # Set Title Name App
 name = Label(root, text="Jester Jz", fg="#000", bd=0, bg="pink")
@@ -40,9 +35,9 @@ pic_default = Image.open('./Image/icon_default.png')
 # convert images to ImageTK format
 img_def = ImageTk.PhotoImage(pic_default)
 
-box_img_before = Label(root, image=img_def, width=600,
-                       height=450, bg="#303030")
-box_img_before.grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+box_img_before = Label(root, image=img_def, width=720,
+                       height=576, bg="#303030")
+box_img_before.grid(column=0, row=2, columnspan=2, padx=20, pady=10)
 
 # title Image After
 after_name = Label(root, text="Image After", fg="#000", bd=0, bg="pink")
@@ -50,9 +45,9 @@ after_name.config(font=("Arial", 16, "bold"))
 after_name.grid(column=2, row=1, columnspan=2, padx=10, pady=10)
 
 # Image box before
-box_img_after = Label(root, image=img_def, width=600,
-                      height=450, bg="#303030")
-box_img_after.grid(column=2, row=2, columnspan=2, padx=10, pady=10)
+box_img_after = Label(root, image=img_def, width=720,
+                      height=576, bg="#303030")
+box_img_after.grid(column=2, row=2, columnspan=2, padx=20, pady=10)
 
 
 def clear():
@@ -70,7 +65,7 @@ def clear():
 
 
 def select():
-    global path, temp_img
+    global temp_img
 
     path = filedialog.askopenfilename()
 
@@ -85,7 +80,7 @@ def select():
         img = Image.fromarray(img)
 
         # resize Image
-        resize_bf = img.resize((600, 450), Image.ANTIALIAS)
+        resize_bf = img.resize((720, 576), Image.ANTIALIAS)
 
         # convert images to ImageTK format
         img_bf = ImageTk.PhotoImage(resize_bf)
@@ -125,7 +120,7 @@ def open_camera():
             img_pic = Image.fromarray(img_pic)
 
             # resize Image
-            resize_bf = img_pic.resize((600, 450), Image.ANTIALIAS)
+            resize_bf = img_pic.resize((720, 576), Image.ANTIALIAS)
 
             # convert images to ImageTK format
             img_bf = ImageTk.PhotoImage(resize_bf)
@@ -142,8 +137,7 @@ def open_camera():
     return 0
 
 
-def Sobel(Image):
-
+def Sobel(Image_path):
     # im = cv.imread('./Image/a.jpg')
     # im = im.astype('int32')
     # dx = ndimage.sobel(im, 0)  # horizontal derivative
@@ -151,17 +145,14 @@ def Sobel(Image):
     # mag = np.hypot(dx, dy)  # magnitude
     # mag *= 255.0 / np.max(mag)  # normalize (Q&D)
     # mag.save('sobel.jpg')
-    # # Edge_x = cv.Sobel(Image, cv.CV_64F, 1, 0, ksize=3)
-    # # # cv.imshow('SobelY filter', Edge_x)
-    # # Edge_y = cv.Sobel(Image, cv.CV_64F, 0, 1, ksize=3)
 
     # # # Edge = np.sqrt(Edge_x**2 + Edge_y**2)
     # # print(Edge_x)
     # # # resize Image
     # # resize_bf = Edge_x.resize((600, 450), Image.ANTIALIAS)
 
-    # # convert images to ImageTK format
-    # img = ImageTk.PhotoImage(Image.open(path))
+    # convert images to ImageTK format
+    # img = ImageTk.PhotoImage(Image.open(Image_path))
     # # set image to Label
     # box_img_after.configure(image=img)
     # box_img_after.image = img
@@ -176,25 +167,16 @@ def Laplacian(input_image):
         for j in range(1, im.shape[1]-1):
             A = (4*im.item(i, j)-im.item(i, j+1) -
                  im.item(i+1, j)-im.item(i-1, j)-im.item(i, j-1))
-            #B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
-            #mag = (A*A + B*B)**(.5)
+            # B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
+            # mag = (A*A + B*B)**(.5)
             if(A < 0):
                 temp.itemset((i, j), 0)
             elif(A > 255):
                 temp.itemset((i, j), 255)
             else:
                 temp.itemset((i, j), A)
-
-    img_path = "Laplacian.jpg"
-    cv.imwrite(img_path, temp)
-
-    # resize Image
-    resize_bf = Image.open(img_path).resize((600, 450), Image.ANTIALIAS)
-    # # convert images to ImageTK format
-    img = ImageTk.PhotoImage(resize_bf)
-    # set image to Label
-    box_img_after.configure(image=img)
-    box_img_after.image = img
+    name_image = "./Image/Laplacian_"
+    save_show_image(name_image, temp)
     return
 
 
@@ -208,15 +190,9 @@ def Gray_Scale(input_image):
             for k in range(0, 3):
                 sum += pixel_val[i, j][k]
             pixel_val[i, j] = (sum//3, sum//3, sum//3)
-    img_path = "Gray.jpg"
-    gray_img.save(img_path)
-    # resize Image
-    resize_bf = Image.open(img_path).resize((600, 450), Image.ANTIALIAS)
-    # # convert images to ImageTK format
-    img = ImageTk.PhotoImage(resize_bf)
-    # set image to Label
-    box_img_after.configure(image=img)
-    box_img_after.image = img
+    name_image = "./Image/Gray_"
+    temp = cv.imread(input_image, 0)
+    save_show_image(name_image, temp)
     return
 
 
@@ -272,12 +248,33 @@ def Binary(input_image):
     img_path = "BinaryPT.jpg"
     binary_pt_image.save(img_path)
     # resize Image
-    resize_bf = Image.open(img_path).resize((600, 450), Image.ANTIALIAS)
+    resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
     # # convert images to ImageTK format
     img = ImageTk.PhotoImage(resize_bf)
     # set image to Label
     box_img_after.configure(image=img)
     box_img_after.image = img
+    return
+
+
+def save_show_image(name_image, temp):
+    global img_counter
+    img_path = name_image+"{}".format(img_counter)+".jpg"
+    print(img_path)
+    if os.path.isfile(img_path):
+        print("co")
+        img_counter += 1
+        save_show_image(name_image, temp)
+    else:
+        cv.imwrite(img_path, temp)
+        print(img_counter)
+        # resize Image
+        resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
+        # convert images to ImageTK format
+        img = ImageTk.PhotoImage(resize_bf)
+        # set image to Label
+        box_img_after.configure(image=img)
+        box_img_after.image = img
     return
 
 
