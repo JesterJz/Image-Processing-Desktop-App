@@ -21,7 +21,7 @@ temp_img = None
 # Set Title Name App
 name = Label(root, text="Jester Jz", fg="#000", bd=0, bg="pink")
 name.config(font=("Engravers MT", 20))
-name.grid(column=0, row=0, columnspan=6, pady=5)
+name.grid(column=0, row=0, columnspan=6, pady=10)
 
 # title Image before
 before_name = Label(root, text="Image Before", fg="#000", bd=0, bg="pink")
