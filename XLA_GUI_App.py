@@ -6,7 +6,7 @@ from tkinter import filedialog
 import os
 import numpy as np
 import scipy.misc
-from scipy import ndimage
+from scipy import ndimage as nd
 import matplotlib.pyplot as plt
 
 root = Tk()
@@ -21,12 +21,12 @@ temp_img = None
 # Set Title Name App
 name = Label(root, text="Jester Jz", fg="#000", bd=0, bg="pink")
 name.config(font=("Engravers MT", 20))
-name.grid(column=0, row=0, columnspan=4, pady=10)
+name.grid(column=0, row=0, columnspan=6, pady=5)
 
 # title Image before
 before_name = Label(root, text="Image Before", fg="#000", bd=0, bg="pink")
 before_name.config(font=("Arial", 16, "bold"))
-before_name.grid(column=0, row=1, columnspan=2, padx=5, pady=5)
+before_name.grid(column=0, row=1, columnspan=3)
 
 # Image box before
 # Open Img
@@ -37,17 +37,17 @@ img_def = ImageTk.PhotoImage(pic_default)
 
 box_img_before = Label(root, image=img_def, width=720,
                        height=576, bg="#303030")
-box_img_before.grid(column=0, row=2, columnspan=2, padx=20, pady=10)
+box_img_before.grid(column=0, row=2, columnspan=3, padx=20, pady=5)
 
 # title Image After
 after_name = Label(root, text="Image After", fg="#000", bd=0, bg="pink")
 after_name.config(font=("Arial", 16, "bold"))
-after_name.grid(column=2, row=1, columnspan=2, padx=10, pady=10)
+after_name.grid(column=3, row=1, columnspan=3, padx=10, pady=5)
 
 # Image box before
 box_img_after = Label(root, image=img_def, width=720,
                       height=576, bg="#303030")
-box_img_after.grid(column=2, row=2, columnspan=2, padx=20, pady=10)
+box_img_after.grid(column=3, row=2, columnspan=3, padx=20, pady=5)
 
 
 def clear():
@@ -257,16 +257,121 @@ def Binary(input_image):
     return
 
 
-def save_show_image(name_image, temp):
+def Image_Thresholding(input_image):
+
+    # read image
+    img = cv.imread(input_image)
+
+    # convert grayscale image
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    # Image_Thresholding
+    blur = cv.GaussianBlur(gray, (1, 1), 0)
+    ret, thers = cv.threshold(
+        blur, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
+    # ret : nguong da su dung
+    # thers : anh da cat nguong
+
+    name_image = "./Image/Image_Thresholding_"
+    save_show_image(name_image, thers)
+
+    return 0
+
+
+def Reverse_Image(input_image):
+
+    # read image
+    img = cv.imread(input_image)
+
+    # convert grayscale image
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    # ReverseImage
+    image = 255 - gray
+    name_image = "./Image/Reverse_Image_"
+    save_show_image(name_image, image)
+
+    return 0
+
+
+def Log_transf(input_image):
+
+    # read image
+    img = cv.imread(input_image)
+
+    invGamma = 0.6
+    table = []
+    for i in range(256):
+        table.append(((i/255.0)**invGamma)*255)
+    table = np.array(table).astype('uint8')
+    image = cv.LUT(img, table)
+
+    name_image = "./Image/Log_transf_"
+    save_show_image(name_image, image)
+
+    return 0
+
+
+def GLS(input_image):
+
+    img = cv.imread(input_image, 0)
+
+    # # # convert grayscale image
+    # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    m, n = img.shape
+    # the lower threshold value
+    T1 = 100
+
+    # the upper threshold value
+    T2 = 180
+
+    # create a array of zeros
+    img_thresh_back = np.zeros((m, n), dtype=int)
+
+    for i in range(m):
+
+        for j in range(n):
+
+            if T1 < img[i, j] < T2:
+                img_thresh_back[i, j] = 255
+            else:
+                img_thresh_back[i, j] = img[i, j]
+
+    # Convert array to  png image and save img
+    name_image = "GLS_"
+    save_show_image(name_image, img_thresh_back)
+    return 0
+
+
+def Smoothing_Image(input_image):
+
+    img = cv.imread(input_image)
+    blur = cv.blur(img, (20, 20))
+    name_image = "Smoothing_Image_"
+    save_show_image(name_image, blur)
+    return 0
+
+
+def laplace_and_gau(input_image):
+
+    img = cv.imread(input_image)
+    LoG = nd.gaussian_laplace(img, 1)
+    name_image = "laplace_and_gau_"
+    save_show_image(name_image, LoG)
+    return 0
+
+
+def save_show_image(name_image, image):
     global img_counter
     img_path = name_image+"{}".format(img_counter)+".jpg"
     print(img_path)
     if os.path.isfile(img_path):
         print("co")
         img_counter += 1
-        save_show_image(name_image, temp)
+        save_show_image(name_image, image)
     else:
-        cv.imwrite(img_path, temp)
+        cv.imwrite(img_path, image)
         print(img_counter)
         # resize Image
         resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
@@ -278,49 +383,79 @@ def save_show_image(name_image, temp):
     return
 
 
-# button select
-btn_select = Button(root, text="Select Image", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=select)
-btn_select.grid(column=0, row=4, padx=5, pady=5)
-
-# button open camera
-btn_open_cam = Button(root, text="Open Cam", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=open_camera)
-btn_open_cam.grid(column=1, row=4, padx=5, pady=5)
-
-# button clear
-btn_clear = Button(root, text="Clear Image", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
-btn_clear.grid(column=2, row=4, padx=5, pady=5)
-
-# button quit
-btn_cls = Button(root, text="Quit", font=(
-    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=root.quit)
-btn_cls.grid(column=3, row=4, padx=5, pady=5)
-
 # button Sobel
 btn_sobel = Button(root, text="Sobel", font=(
     ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Sobel(temp_img))
-btn_sobel.grid(column=0, row=3)
+btn_sobel.grid(column=0, row=3, pady=5)
 
 # button Laplacian
 btn_Laplacian = Button(root, text="Laplacian", font=(
     ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Laplacian(temp_img))
-btn_Laplacian.grid(column=1, row=3)
+btn_Laplacian.grid(column=1, row=3, pady=5)
 
 # button Gray Scale
 btn_Gray_Scale = Button(root, text="Gray Scale", font=(
     ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Gray_Scale(temp_img))
-btn_Gray_Scale.grid(column=2, row=3)
+btn_Gray_Scale.grid(column=2, row=3, pady=5)
 
 # button Histogram
 btn_Histogram = Button(root, text="Histogram", font=(
     ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Histogram(temp_img))
-btn_Histogram.grid(column=3, row=3)
+btn_Histogram.grid(column=3, row=3, pady=5)
 
-# button Sobel
+# button Binary
 btn_Binary = Button(root, text="Binary", font=(
     ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Binary(temp_img))
-btn_Binary.grid(column=0, row=5)
+btn_Binary.grid(column=4, row=3, pady=5)
+
+# button Reverse Image
+btn_Reverse_Image = Button(root, text="Reverse Image", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Reverse_Image(temp_img))
+btn_Reverse_Image.grid(column=4, row=3, pady=5)
+
+# button Image Thresholding
+btn_Image_Thresholding = Button(root, text="Image Thresholding", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Image_Thresholding(temp_img))
+btn_Image_Thresholding.grid(column=5, row=3, pady=5)
+
+# button Logarithmic transforms
+btn_Log_transf = Button(root, text="Logarithmic transforms", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Log_transf(temp_img))
+btn_Log_transf.grid(column=0, row=4, pady=5)
+
+# button Grey level Slicing
+btn_GLS = Button(root, text="Grey level Slicing", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: GLS(temp_img))
+btn_GLS.grid(column=1, row=4, pady=5)
+
+# button Smoothing Image
+btn_Smoothing_Image = Button(root, text="Smoothing Image", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: Smoothing_Image(temp_img))
+btn_Smoothing_Image.grid(column=2, row=4, pady=5)
+
+# button Laplace and gaussian
+btn_laplace_and_gau = Button(root, text="Laplace and gaussian", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=lambda: laplace_and_gau(temp_img))
+btn_laplace_and_gau.grid(column=3, row=4, pady=5)
+
+# button select
+btn_select = Button(root, text="Select Image", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=select)
+btn_select.grid(column=4, row=4, pady=5)
+
+# button open camera
+btn_open_cam = Button(root, text="Open Cam", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=open_camera)
+btn_open_cam.grid(column=5, row=4, pady=5)
+
+# button clear
+btn_clear = Button(root, text="Clear Image", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=clear)
+btn_clear.grid(column=2, row=5, pady=5)
+
+# button quit
+btn_cls = Button(root, text="Quit", font=(
+    ("Arial"), 10, 'bold'), bg='#fff', fg='#000', command=root.quit)
+btn_cls.grid(column=3, row=5, pady=5)
 
 root.mainloop()
