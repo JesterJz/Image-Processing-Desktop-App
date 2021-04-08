@@ -54,7 +54,6 @@ after_name1.grid(column=4, row=1, columnspan=3, padx=10, pady=5)
 # Show Action
 
 
-
 # Image box before
 box_img_after = Label(root, image=img_def, width=720,
                       height=576, bg="#00695C")
@@ -274,7 +273,7 @@ def Binary(input_image):
     box_img_after.image = img
     return
 
-
+#  phan nguong , 
 def Image_Thresholding(input_image):
     after_name1.configure(text ="Image Thresholding")
     # read image
@@ -287,6 +286,7 @@ def Image_Thresholding(input_image):
         blur, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
     # ret : nguong da su dung
     # thers : anh da cat nguong
+    # từ ngưỡng thang độ xám có thể sử dụng ngưỡng tạo hình ảnh nhị phân 
 
     name_image = "./Image/Image_Thresholding_"
     save_show_image(name_image, thers)
@@ -298,24 +298,27 @@ def Reverse_Image(input_image):
     after_name1.configure(text ="Reverse Image")
     # read image
     img = cv.imread(input_image)
-    # convert grayscale image
+    # convert grayscale image/ chuyen doi khong gian mau
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    # ReverseImage
+    # ReverseImage / chuyen muc xam
     image = 255 - gray
     name_image = "./Image/Reverse_Image_"
     save_show_image(name_image, image)
 
     return 0
 
-
+#  các giá trị cường độ tối hơn được đưa ra các giá trị sáng hơn
+#  chi tiết vùng tối hơn hoặc xám của hình ảnh dễ nhìn thấy hơn
+#
 def Log_transf(input_image):
     after_name1.configure(text ="Logarithmic Transforms")
     # read image
     img = cv.imread(input_image)
-
-    invGamma = 0.6
+    # hang so tỷ lệ / chia đều pixcel 
+    invGamma = 0.6  
     table = []
+    # chuyển đổi 
     for i in range(256):
         table.append(((i/255.0)**invGamma)*255)
     table = np.array(table).astype('uint8')
@@ -326,13 +329,13 @@ def Log_transf(input_image):
 
     return 0
 
-
+    
+# Chuyển đổi mức xám
+# Nâng cao hình ảnh cung cấp độ tương phản tốt hơn và hình ảnh chi tiết hơn
 def GLS(input_image):
     after_name1.configure(text ="Grey Level Slicing")
     img = cv.imread(input_image, 0)
-
     # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
     m, n = img.shape
     # the lower threshold value
     T1 = 100
@@ -356,7 +359,8 @@ def GLS(input_image):
     save_show_image(name_image, img_thresh_back)
     return 0
 
-
+# Làm mờ hình ảnh với nhiều bộ lọc thông thấp khác nhau
+# Làm mờ hình ảnh bằng cách sử dụng bộ lọc hộp chuẩn hóa
 def Smoothing_Image(input_image):
     after_name1.configure(text ="Smoothing Image")
     img = cv.imread(input_image)
