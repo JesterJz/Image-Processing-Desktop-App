@@ -1,13 +1,14 @@
-import cv2 as cv
-from tkinter import *
-from PIL import Image, ImageTk
-from tkinter.font import Font
-from tkinter import filedialog
 import os
+from tkinter import *
+from tkinter import filedialog
+from tkinter.font import Font
+
+import cv2 as cv
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.misc
+from PIL import Image, ImageTk
 from scipy import ndimage as nd
-import matplotlib.pyplot as plt
 
 root = Tk()
 root.title("Xử lý ảnh")
