@@ -14,7 +14,7 @@ def Treeview_ImageProcess(tree_frame):
 
     tree_Scroll.config(command=treeview.yview)
 
-    treeview.column("#0", width=300, minwidth=25)
+    treeview.column("#0", width=250, minwidth=25)
     treeview.heading("#0", text="Cải thiện và nâng cấp ảnh")
     # Treeview items
     treeview.insert(parent='', index='0', iid='item1',

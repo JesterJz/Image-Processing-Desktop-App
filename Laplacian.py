@@ -1,4 +1,5 @@
 import cv2 as cv
+from saveImage import *
 
 
 def Laplacian(input_image):
@@ -18,5 +19,5 @@ def Laplacian(input_image):
             else:
                 temp.itemset((i, j), A)
     name_image = "./Image/Laplacian_"
-    save_show_image(name_image, temp)
+    save_image(name_image, temp)
     return

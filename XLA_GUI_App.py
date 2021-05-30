@@ -11,70 +11,86 @@ from PIL import Image, ImageTk
 from scipy import ndimage as nd
 from tkinter import messagebox
 from TreeView import Treeview_ImageProcess
+from saveimage import *
+from showimage import *
+from grayimage import *
 
 root = Tk()
 root.title("Image processing")
-root.geometry("1020x500")
+root.geometry("1300x750+70+30")
 root.wm_resizable(width=True, height=True)
-root.configure(background='#80CBC4')
+# root.configure(background='#80CBC4')
 # root.maxsize(1920, 1080)
 
 img_counter = 0
 temp_img = None
-# path = None
+pic_default = Image.open('./Image/icon/icon_default.png')
+# convert images to ImageTK format
+img_def = ImageTk.PhotoImage(pic_default)
 
 # Set Title Name App
 name = Label(root, text="Image processing analysis: v1.0",
              fg="#000", bd=0, bg="#80CBC4")
-name.config(font=("Engravers MT", 20))
+name.config(font=("Engravers MT", 18))
 name.grid(column=0, row=0, columnspan=10, pady=10)
 
 # frame treeview
 tree_frame = Frame(root)
-tree_frame.grid(column=0, row=1)
+tree_frame.grid(column=0, row=2, columnspan=3, padx=10)
 Treeview_ImageProcess(tree_frame)
 
+# button Select
+btn_select = Button(root, text="Select", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_select.grid(column=0, row=3)
+# button action
+btn_action = Button(root, text="Action", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_action.grid(column=1, row=3)
+# button open cam
+btn_open_cam = Button(root, text="Camera", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_open_cam.grid(column=2, row=3)
+# button Clear
+btn_clear = Button(root, text="Clear", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_clear.grid(column=0, row=4)
+# button Quit
+btn_quit = Button(root, text="Quit", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_quit.grid(column=2, row=4)
+
+
 # title Image before
-# before_name = Label(root, text="Image Before:",
-#                     fg="#FFFFFF", bd=0, bg="#80CBC4")
-# before_name.config(font=("Arial", 20, "bold"))
-# before_name.grid(column=0, row=1, columnspan=2)
+before_name = Label(root, text="Image Before",
+                    fg="#FFFFFF", bd=0, bg="#80CBC4")
+before_name.config(font=("Arial", 16, "bold"))
+before_name.grid(column=3, row=1,)
 
-# # Image box before
-# pic_default = Image.open('./Image/icon/icon_default.png')
+# Image box before
+box_img_before = Label(root, image=img_def, width=480,
+                       height=500, bg="#00695C")
+box_img_before.grid(column=3, row=2, rowspan=3, padx=10, pady=5)
 
-# # convert images to ImageTK format
-# img_def = ImageTk.PhotoImage(pic_default)
-
-# box_img_before = Label(root, image=img_def, width=720,
-#                        height=576, bg="#00695C")
-# box_img_before.grid(column=0, row=2, columnspan=3, padx=20, pady=5)
-
-# # title Image After
-# after_name = Label(root, text="Image After: ",
-#                    fg="#FFFFFF", bd=0, bg="#80CBC4")
-# after_name.config(font=("Arial", 20, "bold"))
-# after_name.grid(column=3, row=1, columnspan=2, padx=10, pady=5)
-
-# # title Action
-# after_name1 = Label(root, text="None", fg="#004D40", bd=1, bg="#66BB6A")
-# after_name1.config(font=("Arial", 20, "bold"))
-# after_name1.grid(column=4, row=1, columnspan=3, padx=10, pady=5)
-# # Show Action
+# title Image After
+after_name = Label(root, text="Image After",
+                   fg="#FFFFFF", bd=0, bg="#80CBC4")
+after_name.config(font=("Arial", 16, "bold"))
+after_name.grid(column=4, row=1, padx=10, pady=5)
 
 
-# # Image box before
-# box_img_after = Label(root, image=img_def, width=720,
-#                       height=576, bg="#00695C")
-# box_img_after.grid(column=3, row=2, columnspan=3, padx=20, pady=5)
+# Image box before
+box_img_after = Label(root, image=img_def, width=480,
+                      height=500, bg="#00695C")
+box_img_after.grid(column=4, row=2, rowspan=3, padx=10, pady=5)
 
 
-def callback():
-    """
-    Asks the user if they really want to quit
-    """
-    if messagebox.askokcancel("Quit", "Do you really wish to quit?"):
-        root.destroy()
+# def callback():
+#     """
+#     Asks the user if they really want to quit
+#     """
+#     if messagebox.askokcancel("Quit", "Do you really wish to quit?"):
+#         root.destroy()
 
 
 # def clear():
@@ -170,63 +186,46 @@ def callback():
 #     return 0
 
 
-# # def Sobel(Image_path):
-# #     im = cv.imread('./Image/a.jpg')
-# #     im = im.astype('int32')
-# #     dx = ndimage.sobel(im, 0)  # horizontal derivative
-# #     dy = ndimage.sobel(im, 1)  # vertical derivative
-# #     mag = np.hypot(dx, dy)  # magnitude
-# #     mag *= 255.0 / np.max(mag)  # normalize (Q&D)
-# #     mag.save('sobel.jpg')
+# def Sobel(Image_path):
+#     im = cv.imread('./Image/a.jpg')
+#     im = im.astype('int32')
+#     dx = ndimage.sobel(im, 0)  # horizontal derivative
+#     dy = ndimage.sobel(im, 1)  # vertical derivative
+#     mag = np.hypot(dx, dy)  # magnitude
+#     mag *= 255.0 / np.max(mag)  # normalize (Q&D)
+#     mag.save('sobel.jpg')
 
-# #     # # Edge = np.sqrt(Edge_x**2 + Edge_y**2)
-# #     # print(Edge_x)
-# #     # # resize Image
-# #     # resize_bf = Edge_x.resize((600, 450), Image.ANTIALIAS)
+#     # # Edge = np.sqrt(Edge_x**2 + Edge_y**2)
+#     # print(Edge_x)
+#     # # resize Image
+#     # resize_bf = Edge_x.resize((600, 450), Image.ANTIALIAS)
 
-# #     convert images to ImageTK format
-# #     img = ImageTk.PhotoImage(Image.open(Image_path))
-# #     # set image to Label
-# #     box_img_after.configure(image=img)
-# #     box_img_after.image = img
-# #     return
-
-
-def Laplacian(input_image):
-    after_name1.configure(text="Laplacian")
-    im = cv.imread(input_image, 0)
-    temp = im.copy()
-    # print(im.shape[0],im.shape[1])
-    for i in range(1, im.shape[0]-1):
-        for j in range(1, im.shape[1]-1):
-            A = (4*im.item(i, j)-im.item(i, j+1) -
-                 im.item(i+1, j)-im.item(i-1, j)-im.item(i, j-1))
-            # B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
-            # mag = (A*A + B*B)**(.5)
-            if(A < 0):
-                temp.itemset((i, j), 0)
-            elif(A > 255):
-                temp.itemset((i, j), 255)
-            else:
-                temp.itemset((i, j), A)
-    name_image = "./Image/Laplacian_"
-    save_show_image(name_image, temp)
-    return
+#     # convert images to ImageTK format
+#     img = ImageTk.PhotoImage(Image.open(Image_path))
+#     # set image to Label
+#     box_img_after.configure(image=img)
+#     box_img_after.image = img
+#     return
 
 
-# def Gray_Scale(input_image):
-#     after_name1.configure(text="Gray Scale")
-#     gray_img = Image.open(input_image)
-#     pixel_val = gray_img.load()
-#     print(pixel_val[0, 0])
-#     for i in range(gray_img.size[0]):
-#         for j in range(gray_img.size[1]):
-#             sum = 0
-#             for k in range(0, 3):
-#                 sum += pixel_val[i, j][k]
-#             pixel_val[i, j] = (sum//3, sum//3, sum//3)
-#     name_image = "./Image/Gray_"
-#     temp = cv.imread(input_image, 0)
+# def Laplacian(input_image):
+#     after_name1.configure(text="Laplacian")
+#     im = cv.imread(input_image, 0)
+#     temp = im.copy()
+#     # print(im.shape[0],im.shape[1])
+#     for i in range(1, im.shape[0]-1):
+#         for j in range(1, im.shape[1]-1):
+#             A = (4*im.item(i, j)-im.item(i, j+1) -
+#                  im.item(i+1, j)-im.item(i-1, j)-im.item(i, j-1))
+#             # B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
+#             # mag = (A*A + B*B)**(.5)
+#             if(A < 0):
+#                 temp.itemset((i, j), 0)
+#             elif(A > 255):
+#                 temp.itemset((i, j), 255)
+#             else:
+#                 temp.itemset((i, j), A)
+#     name_image = "./Image/Laplacian_"
 #     save_show_image(name_image, temp)
 #     return
 
@@ -282,15 +281,8 @@ def Laplacian(input_image):
 #             else:
 #                 pixel_val[i, j] = (0, 0, 0)
 
-#     img_path = "BinaryPT.jpg"
-#     binary_pt_image.save(img_path)
-#     # resize Image
-#     resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
-#     # # convert images to ImageTK format
-#     img = ImageTk.PhotoImage(resize_bf)
-#     # set image to Label
-#     box_img_after.configure(image=img)
-#     box_img_after.image = img
+#     img_path = "./Image/ImageResult/BinaryPT_"
+
 #     return
 
 # #  phan nguong ,
@@ -330,9 +322,9 @@ def Laplacian(input_image):
 
 #     return 0
 
-# #  các giá trị cường độ tối hơn được đưa ra các giá trị sáng hơn
-# #  chi tiết vùng tối hơn hoặc xám của hình ảnh dễ nhìn thấy hơn
-# #
+# # #  các giá trị cường độ tối hơn được đưa ra các giá trị sáng hơn
+# # #  chi tiết vùng tối hơn hoặc xám của hình ảnh dễ nhìn thấy hơn
+# # #
 
 
 # def Log_transf(input_image):
@@ -417,12 +409,12 @@ def Laplacian(input_image):
 #         cv.imwrite(img_path, image)
 #         print(img_counter)
 #         # resize Image
-#         resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
-#         # convert images to ImageTK format
-#         img = ImageTk.PhotoImage(resize_bf)
-#         # set image to Label
-#         box_img_after.configure(image=img)
-#         box_img_after.image = img
+#     resize_bf = Image.open(img_path).resize((720, 576), Image.ANTIALIAS)
+#     # convert images to ImageTK format
+#     img = ImageTk.PhotoImage(resize_bf)
+#     # set image to Label
+#     box_img_after.configure(image=img)
+#     box_img_after.image = img
 #     return
 
 
@@ -468,7 +460,7 @@ def Laplacian(input_image):
 
 # # button Gray Scale
 # btn_Gray_Scale = Button(root, text="Gray Scale", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Gray_Scale(temp_img))
+#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Gray_Scale(temp_img, box_img_after))
 # btn_Gray_Scale.grid(column=3, row=3, pady=5)
 
 # # button Histogram
@@ -506,5 +498,5 @@ def Laplacian(input_image):
 #     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: laplace_and_gau(temp_img))
 # btn_laplace_and_gau.grid(column=5, row=4, pady=5)
 
-root.protocol("WM_DELETE_WINDOW", callback)
+# root.protocol("WM_DELETE_WINDOW", callback)
 root.mainloop()
