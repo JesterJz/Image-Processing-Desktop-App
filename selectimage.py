@@ -21,15 +21,6 @@ def select(box_img):
         show_image(img_path, box_img)
         # print(img_path)
         return img_path
-        # resize Image
-        # resize_bf = img.resize((720, 576), Image.ANTIALIAS)
-
-        # # convert images to ImageTK format
-        # img_bf = ImageTk.PhotoImage(resize_bf)
-
-        # # set image to Label
-        # box_img_before.configure(image=img_bf)
-        # box_img_before.image = img_bf
     else:
         messagebox.askquestion(
             'Warning !!!', "Sorry. let's choice a image :((")

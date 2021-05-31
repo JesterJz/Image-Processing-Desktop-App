@@ -18,6 +18,6 @@ def Laplacian(input_image):
                 temp.itemset((i, j), 255)
             else:
                 temp.itemset((i, j), A)
-    name_image = "./Image/Laplacian_"
+    name_image = "Laplacian_"
     save_image(name_image, temp)
     return

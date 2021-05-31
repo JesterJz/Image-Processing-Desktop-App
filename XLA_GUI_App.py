@@ -15,6 +15,7 @@ from saveimage import *
 from showimage import *
 from grayimage import *
 from selectimage import select
+from opencam import open_camera
 
 root = Tk()
 root.title("Image processing")
@@ -73,7 +74,7 @@ btn_action = Button(root, text="Action", font=(
 btn_action.grid(column=1, row=3)
 # button open cam
 btn_open_cam = Button(root, text="Camera", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: open_camera(box_img_before))
 btn_open_cam.grid(column=2, row=3)
 # button Clear
 btn_clear = Button(root, text="Clear", font=(
@@ -112,34 +113,6 @@ def callback():
 #     messagebox.askquestion('Warning !!!', 'Sorry the feature is updating :((')
 
 #     return 0
-
-
-# def select():
-#     global temp_img
-#     path = filedialog.askopenfilename()
-
-#     if len(path) > 0:
-#         # load the image from disk
-#         img = cv.imread(path)
-#         temp_img = path
-
-#         # Convert img to RGB
-#         img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-
-#         # convert images to PIL format
-#         img = Image.fromarray(img)
-
-#         # resize Image
-#         resize_bf = img.resize((720, 576), Image.ANTIALIAS)
-
-#         # convert images to ImageTK format
-#         img_bf = ImageTk.PhotoImage(resize_bf)
-
-#         # set image to Label
-#         box_img_before.configure(image=img_bf)
-#         box_img_before.image = img_bf
-#     return 0
-
 
 # def open_camera():
 #     global temp_img
