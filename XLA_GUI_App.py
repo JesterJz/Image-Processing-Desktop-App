@@ -14,6 +14,7 @@ from TreeView import Treeview_ImageProcess
 from saveimage import *
 from showimage import *
 from grayimage import *
+from selectimage import select
 
 root = Tk()
 root.title("Image processing")
@@ -39,28 +40,6 @@ tree_frame = Frame(root)
 tree_frame.grid(column=0, row=2, columnspan=3, padx=10)
 Treeview_ImageProcess(tree_frame)
 
-# button Select
-btn_select = Button(root, text="Select", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
-btn_select.grid(column=0, row=3)
-# button action
-btn_action = Button(root, text="Action", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
-btn_action.grid(column=1, row=3)
-# button open cam
-btn_open_cam = Button(root, text="Camera", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
-btn_open_cam.grid(column=2, row=3)
-# button Clear
-btn_clear = Button(root, text="Clear", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
-btn_clear.grid(column=0, row=4)
-# button Quit
-btn_quit = Button(root, text="Quit", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
-btn_quit.grid(column=2, row=4)
-
-
 # title Image before
 before_name = Label(root, text="Image Before",
                     fg="#FFFFFF", bd=0, bg="#80CBC4")
@@ -84,13 +63,34 @@ box_img_after = Label(root, image=img_def, width=480,
                       height=500, bg="#00695C")
 box_img_after.grid(column=4, row=2, rowspan=3, padx=10, pady=5)
 
+# button Select
+btn_select = Button(root, text="Select", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: select(box_img_before))
+btn_select.grid(column=0, row=3)
+# button action
+btn_action = Button(root, text="Action", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_action.grid(column=1, row=3)
+# button open cam
+btn_open_cam = Button(root, text="Camera", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_open_cam.grid(column=2, row=3)
+# button Clear
+btn_clear = Button(root, text="Clear", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_clear.grid(column=0, row=4)
+# button Quit
+btn_quit = Button(root, text="Quit", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_quit.grid(column=2, row=4)
 
-# def callback():
-#     """
-#     Asks the user if they really want to quit
-#     """
-#     if messagebox.askokcancel("Quit", "Do you really wish to quit?"):
-#         root.destroy()
+
+def callback():
+    """
+    Asks the user if they really want to quit
+    """
+    if messagebox.askokcancel("Quit", "Do you really wish to quit?"):
+        root.destroy()
 
 
 # def clear():
