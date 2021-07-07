@@ -10,12 +10,14 @@ import scipy.misc
 from PIL import Image, ImageTk
 from scipy import ndimage as nd
 from tkinter import messagebox
+
 from TreeView import Treeview_ImageProcess
 from saveimage import *
 from showimage import *
 from grayimage import *
 from selectimage import select
 from opencam import open_camera
+from clearimage import clear_img_box
 
 root = Tk()
 root.title("Image processing")
@@ -78,11 +80,11 @@ btn_open_cam = Button(root, text="Camera", font=(
 btn_open_cam.grid(column=2, row=3)
 # button Clear
 btn_clear = Button(root, text="Clear", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: clear_img_box(box_img_before, box_img_after))
 btn_clear.grid(column=0, row=4)
 # button Quit
 btn_quit = Button(root, text="Quit", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=root.quit)
 btn_quit.grid(column=2, row=4)
 
 
@@ -94,70 +96,10 @@ def callback():
         root.destroy()
 
 
-# def clear():
-#     after_name1.configure(text="Clear")
-#     pic_default = Image.open('./Image/icon_default.png')
-#     # convert images to ImageTK format
-#     img_def = ImageTk.PhotoImage(pic_default)
-#     # set image to Label default before
-#     box_img_before.configure(image=img_def)
-#     box_img_before.image = img_def
-
-#     # set image to Label default after
-#     box_img_after.configure(image=img_def)
-#     box_img_after.image = img_def
-#     return 0
-
-
 # def save_as():
 #     messagebox.askquestion('Warning !!!', 'Sorry the feature is updating :((')
 
 #     return 0
-
-# def open_camera():
-#     global temp_img
-#     cap = cv.VideoCapture(0)
-#     while(True):
-#         # Capture frame-by-frame
-#         ret, frame = cap.read()
-
-#         # Our operations on the frame come here
-#         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-
-#         # Display the resulting frame
-#         cv.imshow('Take of Pictute On Camera', gray)
-#         if cv.waitKey(1) == 32:
-#             img_name = "./Image/take_of_pic.png"
-#             cv.imwrite(img_name, frame)
-#             print("{} written!".format(img_name))
-
-#             # load the image from disk
-#             img_pic = cv.imread("./Image/take_of_pic.png")
-#             temp_img = "./Image/take_of_pic.png"
-
-#             # Convert img to RGB
-#             img_pic = cv.cvtColor(img_pic, cv.COLOR_BGR2RGB)
-
-#             # convert images to PIL format
-#             img_pic = Image.fromarray(img_pic)
-
-#             # resize Image
-#             resize_bf = img_pic.resize((720, 576), Image.ANTIALIAS)
-
-#             # convert images to ImageTK format
-#             img_bf = ImageTk.PhotoImage(resize_bf)
-#             # set image to Label
-#             box_img_before.configure(image=img_bf)
-#             box_img_before.image = img_bf
-
-#             break
-#         elif cv.waitKey(1) & 0xFF == ord('q'):
-#             break
-
-#     cap.release()
-#     cv.destroyAllWindows()
-#     return 0
-
 
 # def Sobel(Image_path):
 #     im = cv.imread('./Image/a.jpg')
@@ -179,29 +121,6 @@ def callback():
 #     box_img_after.configure(image=img)
 #     box_img_after.image = img
 #     return
-
-
-# def Laplacian(input_image):
-#     after_name1.configure(text="Laplacian")
-#     im = cv.imread(input_image, 0)
-#     temp = im.copy()
-#     # print(im.shape[0],im.shape[1])
-#     for i in range(1, im.shape[0]-1):
-#         for j in range(1, im.shape[1]-1):
-#             A = (4*im.item(i, j)-im.item(i, j+1) -
-#                  im.item(i+1, j)-im.item(i-1, j)-im.item(i, j-1))
-#             # B = abs(im.item(i-1,j-1)+im.item(i,j-1)+im.item(i-1,j)-im.item(i+1,j+1)-im.item(i,j+1)-im.item(i+1,j))
-#             # mag = (A*A + B*B)**(.5)
-#             if(A < 0):
-#                 temp.itemset((i, j), 0)
-#             elif(A > 255):
-#                 temp.itemset((i, j), 255)
-#             else:
-#                 temp.itemset((i, j), A)
-#     name_image = "./Image/Laplacian_"
-#     save_show_image(name_image, temp)
-#     return
-
 
 # def Histogram(input_image):
 #     after_name1.configure(text="Histogram")
@@ -391,85 +310,16 @@ def callback():
 #     return
 
 
-# # button select
-# btn_select = Button(root, text="Select Image", font=(
-#     ("Arial"), 10, 'bold'), bg='#00897B', width=12, height=1, fg='#FFFFFF', command=select)
-# btn_select.grid(column=0, row=3, pady=5)
-
-# # button open camera
-# btn_open_cam = Button(root, text="Open Cam", font=(
-#     ("Arial"), 10, 'bold'), bg='#00897B', width=12, height=1, fg='#FFFFFF', command=open_camera)
-# btn_open_cam.grid(column=0, row=4, pady=5)
-
-# # button clear
-# btn_clear = Button(root, text="Clear Image", font=(
-#     ("Arial"), 10, 'bold'), bg='#827717', width=12, height=1, fg='#FFFFFF', command=clear)
-# btn_clear.grid(column=1, row=3, pady=5)
-
 # # button Save as
 # btn_save_as = Button(root, text="Save as", font=(
 #     ("Arial"), 10, 'bold'), bg='#827717', width=12, height=1, fg='#FFFFFF', command=save_as)
 # btn_save_as.grid(column=1, row=4, pady=5)
-
-# # button quit
-# btn_cls = Button(root, text="Quit", font=(
-#     ("Arial"), 10, 'bold'), bg='#1B5E20', width=12, height=1, fg='#FFFFFF', command=root.quit)
-# btn_cls.grid(column=0, row=5, pady=5)
 
 # # button Reverse Image
 # btn_Reverse_Image = Button(root, text="Reverse", font=(
 #     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Reverse_Image(temp_img))
 # btn_Reverse_Image.grid(column=2, row=3, pady=5)
 
-# # button Image Thresholding
-# btn_Image_Thresholding = Button(root, text="Thresholding", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Image_Thresholding(temp_img))
-# btn_Image_Thresholding.grid(column=2, row=4, pady=5)
-
-# # button Laplacian
-# btn_Laplacian = Button(root, text="Laplacian", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Laplacian(temp_img))
-# btn_Laplacian.grid(column=2, row=5, pady=5)
-
-# # button Gray Scale
-# btn_Gray_Scale = Button(root, text="Gray Scale", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Gray_Scale(temp_img, box_img_after))
-# btn_Gray_Scale.grid(column=3, row=3, pady=5)
-
-# # button Histogram
-# btn_Histogram = Button(root, text="Histogram", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Histogram(temp_img))
-# btn_Histogram.grid(column=3, row=4, pady=5)
-
-# # button Binary
-# btn_Binary = Button(root, text="Binary", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Binary(temp_img))
-# btn_Binary.grid(column=3, row=5, pady=5)
-
-# # button Sobel
-# btn_sobel = Button(root, text="Sobel", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Sobel(temp_img))
-# btn_sobel.grid(column=4, row=3, pady=5)
-
-# # button Logarithmic transforms
-# btn_Log_transf = Button(root, text="Logarithmic T", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Log_transf(temp_img))
-# btn_Log_transf.grid(column=4, row=4, pady=5)
-
-# # button Grey level Slicing
-# btn_GLS = Button(root, text="Grey LS", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: GLS(temp_img))
-# btn_GLS.grid(column=4, row=5, pady=5)
-
-# # button Smoothing Image
-# btn_Smoothing_Image = Button(root, text="Smoothing", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Smoothing_Image(temp_img))
-# btn_Smoothing_Image.grid(column=5, row=3, pady=5)
-
-# # button Laplace and gaussian
-# btn_laplace_and_gau = Button(root, text="L & Gaussian", font=(
-#     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: laplace_and_gau(temp_img))
-# btn_laplace_and_gau.grid(column=5, row=4, pady=5)
-
-# root.protocol("WM_DELETE_WINDOW", callback)
+# ask Are you sure you want to quit?
+root.protocol("WM_DELETE_WINDOW", callback)
 root.mainloop()

@@ -1,9 +1,9 @@
 import cv2 as cv
-from saveImage import *
+from saveimage import *
 
 
-def Laplacian(input_image):
-    im = cv.imread(input_image, 0)
+def Laplacian(input_path):
+    im = cv.imread(input_path, 0)
     temp = im.copy()
     # print(im.shape[0],im.shape[1])
     for i in range(1, im.shape[0]-1):
