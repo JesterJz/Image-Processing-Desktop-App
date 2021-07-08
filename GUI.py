@@ -15,9 +15,9 @@ from TreeView import Treeview_ImageProcess
 from saveimage import *
 from showimage import *
 from grayimage import *
-from selectimage import select
 from opencam import open_camera
 from clearimage import clear_img_box
+from openviewimg import viewimage
 
 root = Tk()
 root.title("Image processing")
@@ -27,7 +27,7 @@ root.wm_resizable(width=True, height=True)
 # root.maxsize(1920, 1080)
 
 img_counter = 0
-temp_img = None
+img_path = None
 pic_default = Image.open('./Image/icon/icon_default.png')
 # convert images to ImageTK format
 img_def = ImageTk.PhotoImage(pic_default)
@@ -68,11 +68,12 @@ box_img_after.grid(column=4, row=2, rowspan=3, padx=10, pady=5)
 
 # button Select
 btn_select = Button(root, text="Select", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: select(box_img_before))
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+btn_select.config(command=lambda: select(box_img_before))
 btn_select.grid(column=0, row=3)
 # button action
 btn_action = Button(root, text="Action", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF')
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: select(box_img_before))
 btn_action.grid(column=1, row=3)
 # button open cam
 btn_open_cam = Button(root, text="Camera", font=(
@@ -82,10 +83,14 @@ btn_open_cam.grid(column=2, row=3)
 btn_clear = Button(root, text="Clear", font=(
     ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: clear_img_box(box_img_before, box_img_after))
 btn_clear.grid(column=0, row=4)
-# button Quit
-btn_quit = Button(root, text="Quit", font=(
-    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=root.quit)
-btn_quit.grid(column=2, row=4)
+# # button Quit
+# btn_quit = Button(root, text="Quit", font=(
+#     ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=root.quit)
+# btn_quit.grid(column=2, row=4)
+# button view image
+btn_view_img = Button(root, text="View Image", font=(
+    ("Arial"), 10, 'bold'), bg='#43A047', width=10, height=1, fg='#FFFFFF', command=lambda: viewimage(root, img_path))
+btn_view_img.grid(column=1, row=4)
 
 
 def callback():
@@ -94,6 +99,17 @@ def callback():
     """
     if messagebox.askokcancel("Quit", "Do you really wish to quit?"):
         root.destroy()
+
+
+def select(box_img):
+    global img_path
+    img_path = filedialog.askopenfilename()
+
+    if len(img_path) > 0:
+        show_image(img_path, box_img)
+    else:
+        messagebox.askquestion(
+            'Warning !!!', "Sorry. let's choice a image :((")
 
 
 # def save_as():
@@ -309,17 +325,14 @@ def callback():
 #     box_img_after.image = img
 #     return
 
-
 # # button Save as
 # btn_save_as = Button(root, text="Save as", font=(
 #     ("Arial"), 10, 'bold'), bg='#827717', width=12, height=1, fg='#FFFFFF', command=save_as)
 # btn_save_as.grid(column=1, row=4, pady=5)
-
 # # button Reverse Image
 # btn_Reverse_Image = Button(root, text="Reverse", font=(
 #     ("Arial"), 10, 'bold'), bg='#43A047', width=14, height=1, fg='#FFFFFF', command=lambda: Reverse_Image(temp_img))
 # btn_Reverse_Image.grid(column=2, row=3, pady=5)
-
 # ask Are you sure you want to quit?
 root.protocol("WM_DELETE_WINDOW", callback)
 root.mainloop()
