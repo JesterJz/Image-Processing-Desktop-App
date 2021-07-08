@@ -106,7 +106,11 @@ def select(box_img):
     img_path = filedialog.askopenfilename()
 
     if len(img_path) > 0:
-        show_image(img_path, box_img)
+        try:
+            show_image(img_path, box_img)
+        except Exception:
+            box_img.configure(text="image not show")
+            box_img.image = "image not show"
     else:
         messagebox.askquestion(
             'Warning !!!', "Sorry. let's choice a image :((")
