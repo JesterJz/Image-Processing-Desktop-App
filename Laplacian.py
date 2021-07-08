@@ -1,8 +1,9 @@
 import cv2 as cv
+from saveimage import *
 
 
-def Laplacian(input_image):
-    im = cv.imread(input_image, 0)
+def Laplacian(input_path):
+    im = cv.imread(input_path, 0)
     temp = im.copy()
     # print(im.shape[0],im.shape[1])
     for i in range(1, im.shape[0]-1):
@@ -17,6 +18,6 @@ def Laplacian(input_image):
                 temp.itemset((i, j), 255)
             else:
                 temp.itemset((i, j), A)
-    name_image = "./Image/Laplacian_"
-    save_show_image(name_image, temp)
+    name_image = "Laplacian_"
+    save_image(name_image, temp)
     return
